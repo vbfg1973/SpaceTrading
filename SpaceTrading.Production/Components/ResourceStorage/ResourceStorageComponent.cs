@@ -30,14 +30,12 @@ namespace SpaceTrading.Production.Components.ResourceStorage
 
         public bool HasAvailable(ResourceQuantity resourceQuantity)
         {
-            if (!Storage.ContainsKey(resourceQuantity.Resource)) return false;
-
-            return Storage[resourceQuantity.Resource].Quantity >= resourceQuantity.Quantity;
+            return Storage.ContainsKey(resourceQuantity.Resource) && Storage[resourceQuantity.Resource].HasAmount(resourceQuantity);
         }
 
         public bool TryAdd(ResourceQuantity resourceQuantity)
         {
-            if (VolumeTaken < resourceQuantity.Volume) return false;
+            if (VolumeRemaining < resourceQuantity.Volume) return false;
 
             Storage.TryAdd(resourceQuantity.Resource,
                 new ResourceQuantity { Resource = resourceQuantity.Resource, Quantity = 0 });

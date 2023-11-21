@@ -2,10 +2,6 @@
 
 namespace SpaceTrading.Production.Components.ResourceProduction.Recipes
 {
-    public record ProductionRecipe
-    {
-        public ResourceQuantity ResourceQuantity { get; set; }
-        public ProductionRecipeIngredients Ingredients { get; set; }
-        public float TimeTaken { get; set; }
-    }
+    public record ProductionRecipe(ResourceQuantity ResourceQuantity, ProductionRecipeIngredients Ingredients,
+        float TimeTaken);
 }

@@ -11,7 +11,7 @@ namespace SpaceTrading.Production.Components.ResourceProduction.Recipes
             return other != null && OrderedBySize().SequenceEqual(other.OrderedBySize());
         }
 
-        public IEnumerable<ResourceQuantity> OrderedBySize()
+        internal IEnumerable<ResourceQuantity> OrderedBySize()
         {
             return this.OrderByDescending(x => x.Quantity).ThenBy(x => x.Resource.Name);
         }
@@ -20,8 +20,7 @@ namespace SpaceTrading.Production.Components.ResourceProduction.Recipes
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != GetType()) return false;
-            return Equals((ProductionRecipeIngredients)obj);
+            return obj.GetType() == GetType() && Equals((ProductionRecipeIngredients)obj);
         }
 
         public override int GetHashCode()

@@ -2,7 +2,7 @@
 {
     public class ResourceQuantity
     {
-        public Resource Resource { get; set; }
+        public Resource Resource { get; init; } = null!;
         public int Quantity { get; set; }
 
         public int Volume => (int)Resource.Size * Quantity;
