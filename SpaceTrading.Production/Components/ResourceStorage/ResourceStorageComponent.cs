@@ -6,10 +6,11 @@ namespace SpaceTrading.Production.Components.ResourceStorage
     {
         public ResourceStorageComponent(int volume)
         {
+            Storage = new Dictionary<Resource, ResourceQuantity>();
             Volume = volume;
         }
 
-        public Dictionary<Resource, ResourceQuantity> Storage { get; set; } = new();
+        private Dictionary<Resource, ResourceQuantity> Storage { get; }
 
         public int Volume { get; set; }
 
@@ -23,6 +24,11 @@ namespace SpaceTrading.Production.Components.ResourceStorage
             return Storage.Values.OrderByDescending(x => x.Volume).ThenBy(x => x.Resource.Name);
         }
 
+        internal void AddVolume(int extraVolumeRequired)
+        {
+            Volume += extraVolumeRequired;
+        }
+        
         public bool WillFit(int volume)
         {
             return Volume - VolumeTaken >= volume;

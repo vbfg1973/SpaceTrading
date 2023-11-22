@@ -16,18 +16,22 @@ namespace SpaceTrading.Production
             return worldBuilder;
         }
 
-        public static int DecorateEntityProductionFromRecipe(this World world, int entityId,
+        public static bool DecorateEntityWithProductionFromRecipeComponents(this World world, int entityId,
             ProductionRecipe productionRecipe)
         {
             const int productionRuns = 50;
 
             var entity = world.GetEntity(entityId);
 
+            if (entity.Has<ResourceProductionComponent>() || entity.Has<ProductionFlagComponent>() ||
+                entity.Has<ResourceStorageComponent>()) return false;
+            
+            entity.Attach(new ProductionFlagComponent());
             entity.Attach(new ResourceProductionComponent(productionRecipe));
             entity.Attach(new ResourceStorageComponent(productionRecipe.SingleRunVolumeRequired * productionRuns));
-            entity.Attach(new ProductionFlagComponent());
 
-            return entity.Id;
+            return true;
+
         }
     }
 }
