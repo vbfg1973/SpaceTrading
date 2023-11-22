@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using MonoGame.Extended.Entities;
 using MonoGame.Extended.Entities.Systems;
+using SpaceTrading.Production.Components;
 using SpaceTrading.Production.Components.ResourceProduction;
 using SpaceTrading.Production.Components.ResourceProduction.Recipes;
 using SpaceTrading.Production.Components.ResourceProduction.StateMachine;
@@ -14,7 +15,7 @@ namespace SpaceTrading.Production.Systems
         private ComponentMapper<ResourceStorageComponent> _storageComponentMapper = null!;
 
         public ProductionSystem() : base(Aspect.All(typeof(ResourceProductionComponent),
-            typeof(ResourceStorageComponent)))
+            typeof(ResourceStorageComponent), typeof(ProductionFlagComponent)))
         {
         }
 
@@ -32,12 +33,12 @@ namespace SpaceTrading.Production.Systems
             switch (production.CurrentState)
             {
                 case ResourceProductionState.InProgress:
-                    ReadyToStart(production, storage);
                     break;
                 case ResourceProductionState.ProductionRunCompleted:
                     ProductionRunCompleted(production, storage);
                     break;
                 case ResourceProductionState.ReadyToStart:
+                    ReadyToStart(production, storage);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

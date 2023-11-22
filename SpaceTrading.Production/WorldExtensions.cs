@@ -1,4 +1,5 @@
 ﻿using MonoGame.Extended.Entities;
+using SpaceTrading.Production.Components;
 using SpaceTrading.Production.Components.ResourceProduction;
 using SpaceTrading.Production.Components.ResourceProduction.Recipes;
 using SpaceTrading.Production.Components.ResourceStorage;
@@ -24,6 +25,7 @@ namespace SpaceTrading.Production
             entity.Attach(new ResourceProductionComponent(productionRecipe));
             entity.Attach(new ResourceStorageComponent(
                 (productionRecipe.Ingredients.Volume + productionRecipe.ResourceQuantity.Volume) * productionRuns));
+            entity.Attach(new ProductionFlagComponent());
 
             return entity.Id;
         }
