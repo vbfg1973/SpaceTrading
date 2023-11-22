@@ -2,21 +2,30 @@
 using SpaceTrading.Production.Components.ResourceProduction;
 using SpaceTrading.Production.Components.ResourceProduction.Recipes;
 using SpaceTrading.Production.Components.ResourceStorage;
+using SpaceTrading.Production.Systems;
 
 namespace SpaceTrading.Production
 {
     public static class WorldExtensions
     {
-        public static void CreateProductionEntityFromRecipe(this World world, ProductionRecipe productionRecipe)
+        public static WorldBuilder AddProductionSystems(this WorldBuilder worldBuilder)
+        {
+            worldBuilder.AddSystem(new ProductionSystem());
+
+            return worldBuilder;
+        }
+        
+        public static int DecorateEntityProductionFromRecipe(this World world, int entityId, ProductionRecipe productionRecipe)
         {
             const int productionRuns = 50;
 
-            var random = new Random();
-            var entity = world.CreateEntity();
-            // entity.Attach(new Location(random.Next(0, 800), random.Next(0, 640), 3));
+            var entity = world.GetEntity(entityId);
+            
             entity.Attach(new ResourceProductionComponent(productionRecipe));
             entity.Attach(new ResourceStorageComponent(
                 (productionRecipe.Ingredients.Volume + productionRecipe.ResourceQuantity.Volume) * productionRuns));
+
+            return entity.Id;
         }
     }
 }
