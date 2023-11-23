@@ -2,6 +2,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using CsvHelper;
+using SpaceTrading.Production.General.Resources;
 
 namespace SpaceTrading.Cli;
 
@@ -16,12 +17,25 @@ public static class Program
         Console.WriteLine(JsonSerializer.Serialize(productionRecipeFactory.Recipes(),
             new JsonSerializerOptions { WriteIndented = true, Converters = { new JsonStringEnumConverter() } }));
 
-        foreach (var r in productionRecipeFactory.Recipes())
-        {
-            var energyQuantity = productionRecipeFactory.GetEnergyQuantity(r.ResourceQuantity);
+        var energyQuantities = EnergyQuantities(productionRecipeFactory)
+            .OrderByDescending(resourceQuantity => resourceQuantity.Quantity)
+            .ThenBy(resourceQuantity => resourceQuantity.Resource.Name);
 
-            Console.WriteLine($"{r.ResourceQuantity.Resource.Name} - {energyQuantity}"); ;
+        Console.WriteLine();
+        Console.WriteLine("Energy required for all resources consumed by production run");
+        foreach (var resourceQuantity in energyQuantities)
+        {
+            Console.WriteLine($"{resourceQuantity.Resource.Name} - {resourceQuantity.Resource.Category} - {resourceQuantity.Quantity}");
         }
+    }
+
+    private static IEnumerable<ResourceQuantity> EnergyQuantities(ProductionRecipeFactory productionRecipeFactory)
+    {
+        return productionRecipeFactory.Recipes().Select(r => new ResourceQuantity()
+        {
+            Resource = r.ResourceQuantity.Resource,
+            Quantity = productionRecipeFactory.GetEnergyQuantity(r.ResourceQuantity)
+        });
     }
 
     private static IEnumerable<T> ReadCsv<T>(string fileName)

@@ -68,6 +68,7 @@ public class ProductionRecipeFactory
         AddResourceQuantity(ing, resourcesDto.R2Name, resourcesDto.R2Quantity);
         AddResourceQuantity(ing, resourcesDto.R3Name, resourcesDto.R3Quantity);
         AddResourceQuantity(ing, resourcesDto.R4Name, resourcesDto.R4Quantity);
+        AddResourceQuantity(ing, resourcesDto.R5Name, resourcesDto.R5Quantity);
 
         return ing;
     }

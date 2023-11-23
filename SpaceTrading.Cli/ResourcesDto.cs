@@ -18,4 +18,6 @@ public class ResourcesDto
     public int? R3Quantity { get; set; }
     public string? R4Name { get; set; } = null!;
     public int? R4Quantity { get; set; }
+    public string? R5Name { get; set; } = null!;
+    public int? R5Quantity { get; set; }
 }
