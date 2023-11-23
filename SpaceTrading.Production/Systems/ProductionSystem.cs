@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using MonoGame.Extended;
 using MonoGame.Extended.Entities;
 using MonoGame.Extended.Entities.Systems;
 using SpaceTrading.Production.Components;
@@ -9,6 +10,24 @@ using SpaceTrading.Production.Systems.Production.ProductionStateRunners;
 
 namespace SpaceTrading.Production.Systems
 {
+    public static class ProductionStateStrategyFactory
+    {
+        public static IProductionStateStrategy Create(ResourceProductionComponent production, ResourceStorageComponent storage)
+        {
+            switch (production.CurrentState)
+            {
+                case ResourceProductionState.ProductionRunCompleted:
+                    return new ProductionRunCompletedProductionStateStrategy(production, storage);
+                case ResourceProductionState.ReadyToStart:
+                    return new ReadyToStartProductionStateStrategy(production, storage);
+                case ResourceProductionState.InProgress:
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(production.CurrentState), production.CurrentState,
+                        null);
+            }
+        }
+    }
+
     public class ProductionSystem : EntityProcessingSystem
     {
         private ComponentMapper<ResourceProductionComponent> _productionComponentMapper = null!;
@@ -29,27 +48,19 @@ namespace SpaceTrading.Production.Systems
         {
             var production = _productionComponentMapper.Get(entityId);
             var storage = _storageComponentMapper.Get(entityId);
-
-            if (production.CurrentState == ResourceProductionState.InProgress) return;
-
-            var productionStateRunner = ProductionStateStrategy(production.CurrentState, production, storage);
-            productionStateRunner.Run();
+            
+            ProcessComponents(gameTime.GetElapsedSeconds(), production, storage);
         }
 
-        private static IProductionStateStrategy ProductionStateStrategy(ResourceProductionState resourceProductionState,
-            ResourceProductionComponent production, ResourceStorageComponent storage)
+        public static void ProcessComponents(float elapsedSeconds, ResourceProductionComponent production,
+            ResourceStorageComponent storage)
         {
-            switch (resourceProductionState)
-            {
-                case ResourceProductionState.ProductionRunCompleted:
-                    return new ProductionRunCompletedProductionStateStrategy(production, storage);
-                case ResourceProductionState.ReadyToStart:
-                    return new ReadyToStartProductionStateStrategy(production, storage);
-                case ResourceProductionState.InProgress:
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(resourceProductionState), resourceProductionState,
-                        null);
-            }
+            production.Update(elapsedSeconds);
+            
+            if (production.CurrentState == ResourceProductionState.InProgress) return;
+
+            var productionStateRunner = ProductionStateStrategyFactory.Create(production, storage);
+            productionStateRunner.Run();
         }
     }
 }

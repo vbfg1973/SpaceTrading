@@ -30,7 +30,11 @@ namespace SpaceTrading.Production.Systems.Production.ProductionStateRunners
                 return;
             }
 
-            if (_storageComponent.TryAdd(resourceQuantity)) return;
+            if (_storageComponent.TryAdd(resourceQuantity))
+            {
+                Console.WriteLine("Completed production added to storage");
+                return;
+            }
 
             Console.WriteLine("Cannot add completed production to storage");
         }

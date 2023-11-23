@@ -19,11 +19,18 @@ namespace SpaceTrading.Production.Systems.Production.ProductionStateRunners
         public void Run()
         {
             if (!TryGetIngredientsFromStorage(out var ingredients))
+            {
                 Console.WriteLine("Could not get ingredients from storage");
+                return;
+            }
 
-            if (_productionComponent.TryStartProduction(ingredients)) return;
+            if (_productionComponent.TryStartProduction(ingredients))
+            {
+                Console.WriteLine("Could not start production");
+                return;
+            }
 
-            Console.WriteLine("Could not start production");
+            Console.WriteLine("Production started");
         }
 
         private bool TryGetIngredientsFromStorage(out ProductionRecipeIngredients ingredients)

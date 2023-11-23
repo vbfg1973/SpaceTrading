@@ -25,7 +25,7 @@ namespace SpaceTrading.Production.Components.ResourceProduction.Recipes
 
         public override int GetHashCode()
         {
-            throw new NotImplementedException();
+            return HashCode.Combine(OrderedBySize().Select(x => x.GetHashCode()));
         }
 
         public static bool operator ==(ProductionRecipeIngredients? left, ProductionRecipeIngredients? right)
