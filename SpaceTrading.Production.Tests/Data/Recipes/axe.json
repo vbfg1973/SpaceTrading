@@ -1,0 +1,37 @@
+{
+  "ResourceQuantity": {
+    "Resource": {
+      "Name": "Axe",
+      "Category": "Industrial",
+      "Size": "Small"
+    },
+    "Quantity": 10
+  },
+  "TimeTaken": 30.00,
+  "Ingredients": [
+    {
+      "Resource": {
+        "Name": "Wood",
+        "Category": "Agricultural",
+        "Size": "Small"
+      },
+      "Quantity": 1
+    },
+    {
+      "Resource": {
+        "Name": "Iron",
+        "Category": "Metals",
+        "Size": "Small"
+      },
+      "Quantity": 1
+    },
+    {
+      "Resource": {
+        "Name": "Energy",
+        "Category": "Energy",
+        "Size": "Small"
+      },
+      "Quantity": 1
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "ResourceQuantity": {
+    "Resource": {
+      "Name": "Iron",
+      "Category": "Metals",
+      "Size": "Small"
+    },
+    "Quantity": 1
+  },
+  "TimeTaken": 20.00,
+  "Ingredients": [
+    {
+      "Resource": {
+        "Name": "Ore",
+        "Category": "Mineral",
+        "Size": "Small"
+      },
+      "Quantity": 2
+    },
+    {
+      "Resource": {
+        "Name": "Energy",
+        "Category": "Energy",
+        "Size": "Small"
+      },
+      "Quantity": 3
+    }
+  ]
+}

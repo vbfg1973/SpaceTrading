@@ -1,0 +1,21 @@
+{
+  "ResourceQuantity": {
+    "Resource": {
+      "Name": "Energy",
+      "Category": "Energy",
+      "Size": "Small"
+    },
+    "Quantity": 20
+  },
+  "TimeTaken": 10.00,
+  "Ingredients": [
+    {
+      "Resource": {
+        "Name": "Energy",
+        "Category": "Energy",
+        "Size": "Small"
+      },
+      "Quantity": 1
+    }
+  ]
+}

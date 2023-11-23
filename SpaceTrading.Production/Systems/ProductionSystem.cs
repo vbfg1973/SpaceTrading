@@ -3,9 +3,9 @@ using MonoGame.Extended.Entities;
 using MonoGame.Extended.Entities.Systems;
 using SpaceTrading.Production.Components;
 using SpaceTrading.Production.Components.ResourceProduction;
-using SpaceTrading.Production.Components.ResourceProduction.Recipes;
 using SpaceTrading.Production.Components.ResourceProduction.StateMachine;
 using SpaceTrading.Production.Components.ResourceStorage;
+using SpaceTrading.Production.Systems.Production.ProductionStateRunners;
 
 namespace SpaceTrading.Production.Systems
 {
@@ -30,68 +30,24 @@ namespace SpaceTrading.Production.Systems
             var production = _productionComponentMapper.Get(entityId);
             var storage = _storageComponentMapper.Get(entityId);
 
-            switch (production.CurrentState)
+            if (production.CurrentState == ResourceProductionState.InProgress) return;
+            
+            var productionStateRunner = ProductionStateRunner(production.CurrentState, production, storage);
+            productionStateRunner.Run();
+        }
+
+        private static IProductionStateRunner ProductionStateRunner(ResourceProductionState resourceProductionState, ResourceProductionComponent production, ResourceStorageComponent storage)
+        {
+            switch (resourceProductionState)
             {
-                case ResourceProductionState.InProgress:
-                    break;
                 case ResourceProductionState.ProductionRunCompleted:
-                    ProductionRunCompleted(production, storage);
-                    break;
+                    return new ProductionRunCompletedProductionStateRunner(production, storage);
                 case ResourceProductionState.ReadyToStart:
-                    ReadyToStart(production, storage);
-                    break;
+                    return new ReadyToStartProductionStateRunner(production, storage);
+                case ResourceProductionState.InProgress:
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException(nameof(resourceProductionState), resourceProductionState, null);
             }
-        }
-
-        private static void ReadyToStart(ResourceProductionComponent production,
-            ResourceStorageComponent storage)
-        {
-            if (!TryGetIngredientsFromStorage(production, storage, out var ingredients))
-                Console.WriteLine("Could not get ingredients from storage");
-
-            if (production.TryStartProduction(ingredients)) return;
-
-            Console.WriteLine("Could not start production");
-        }
-
-        private static bool TryGetIngredientsFromStorage(ResourceProductionComponent production,
-            ResourceStorageComponent storage, out ProductionRecipeIngredients ingredients)
-        {
-            ingredients = new ProductionRecipeIngredients();
-
-            var ingredientsAvailable = production.Recipe.Ingredients.All(storage.HasAvailable);
-            if (!ingredientsAvailable) return false;
-
-            foreach (var recipeIngredient in production.Recipe.Ingredients)
-            {
-                storage.TryRemove(recipeIngredient, out var resourceQuantity);
-                ingredients.Add(resourceQuantity);
-            }
-
-            return true;
-        }
-
-        private static void ProductionRunCompleted(ResourceProductionComponent production,
-            ResourceStorageComponent storage)
-        {
-            if (!storage.WillFit(production.Recipe.Ingredients.Volume))
-            {
-                Console.WriteLine(
-                    $"Ingredients volume ({production.Recipe.Ingredients.Volume}) will not fit remaining storage ({storage.VolumeRemaining})");
-                return;
-            }
-
-            if (!production.TryGetCompletedResource(out var resourceQuantity))
-            {
-                Console.WriteLine("Cannot get completed production");
-                return;
-            }
-
-            if (storage.TryAdd(resourceQuantity)) return;
-
-            Console.WriteLine("Cannot add completed production to storage");
         }
     }
 }

@@ -26,7 +26,7 @@ namespace SpaceTrading.Production.Components.ResourceProduction
 
         public ResourceProductionState CurrentState { get; set; } = ResourceProductionState.ReadyToStart;
 
-        public void TimePassed(float timePassed)
+        public void Update(float timePassed)
         {
             TimeRemaining -= timePassed;
 
