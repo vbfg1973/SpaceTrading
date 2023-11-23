@@ -41,7 +41,7 @@ namespace SpaceTrading.Production.Tests
             var productionComponent = new ResourceProductionComponent(recipe);
             var storageComponent = new ResourceStorageComponent(productionComponent.Recipe.SingleRunVolumeRequired);
 
-            productionComponent.Update(0.1717f);
+            productionComponent.Update(1f);
             productionComponent.CurrentState.Should().Be(ResourceProductionState.ReadyToStart);
         }
 
