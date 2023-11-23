@@ -1,9 +1,8 @@
-namespace SpaceTrading.Production.Components.ResourceProduction.StateMachine
+namespace SpaceTrading.Production.Components.ResourceProduction.StateMachine;
+
+public enum ResourceProductionTrigger
 {
-    public enum ResourceProductionTrigger
-    {
-        Start,
-        Completed,
-        CompletedResourcesRemoved
-    }
+    Start,
+    Completed,
+    CompletedResourcesRemoved
 }

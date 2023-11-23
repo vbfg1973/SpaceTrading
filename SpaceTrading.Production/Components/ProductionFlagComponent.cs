@@ -1,6 +1,3 @@
-﻿namespace SpaceTrading.Production.Components
-{
-    public class ProductionFlagComponent
-    {
-    }
-}
+﻿namespace SpaceTrading.Production.Components;
+
+public class ProductionFlagComponent { }

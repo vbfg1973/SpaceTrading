@@ -1,9 +1,8 @@
-namespace SpaceTrading.Production.Components.ResourceProduction.StateMachine
+namespace SpaceTrading.Production.Components.ResourceProduction.StateMachine;
+
+public enum ResourceProductionState
 {
-    public enum ResourceProductionState
-    {
-        InProgress,
-        ProductionRunCompleted,
-        ReadyToStart
-    }
+    InProgress,
+    ProductionRunCompleted,
+    ReadyToStart
 }
