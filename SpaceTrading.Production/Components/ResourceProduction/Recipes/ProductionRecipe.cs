@@ -1,5 +1,4 @@
-﻿using System.Text;
-using SpaceTrading.Production.General.Resources;
+﻿using SpaceTrading.Production.General.Resources;
 
 namespace SpaceTrading.Production.Components.ResourceProduction.Recipes
 {
@@ -7,5 +6,5 @@ namespace SpaceTrading.Production.Components.ResourceProduction.Recipes
         float TimeTaken)
     {
         public int SingleRunVolumeRequired => ResourceQuantity.Volume + Ingredients.Volume;
-    };
+    }
 }

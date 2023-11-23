@@ -25,13 +25,12 @@ namespace SpaceTrading.Production
 
             if (entity.Has<ResourceProductionComponent>() || entity.Has<ProductionFlagComponent>() ||
                 entity.Has<ResourceStorageComponent>()) return false;
-            
+
             entity.Attach(new ProductionFlagComponent());
             entity.Attach(new ResourceProductionComponent(productionRecipe));
             entity.Attach(new ResourceStorageComponent(productionRecipe.SingleRunVolumeRequired * productionRuns));
 
             return true;
-
         }
     }
 }

@@ -3,16 +3,18 @@ using SpaceTrading.Production.Components.ResourceStorage;
 
 namespace SpaceTrading.Production.Systems.Production.ProductionStateRunners
 {
-    public class ProductionRunCompletedProductionStateRunner : IProductionStateRunner
+    public class ProductionRunCompletedProductionStateStrategy : IProductionStateStrategy
     {
         private readonly ResourceProductionComponent _productionComponent;
         private readonly ResourceStorageComponent _storageComponent;
 
-        public ProductionRunCompletedProductionStateRunner(ResourceProductionComponent productionComponent, ResourceStorageComponent storageComponent)
+        public ProductionRunCompletedProductionStateStrategy(ResourceProductionComponent productionComponent,
+            ResourceStorageComponent storageComponent)
         {
             _productionComponent = productionComponent;
             _storageComponent = storageComponent;
         }
+
         public void Run()
         {
             if (!_storageComponent.WillFit(_productionComponent.Recipe.Ingredients.Volume))

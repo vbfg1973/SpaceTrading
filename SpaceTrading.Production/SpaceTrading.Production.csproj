@@ -8,13 +8,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="MonoGame.Extended.Entities" Version="3.8.0" />
-        <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.0.1641" />
-        <PackageReference Include="Stateless" Version="5.14.0" />
+        <PackageReference Include="MonoGame.Extended.Entities" Version="3.8.0"/>
+        <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.0.1641"/>
+        <PackageReference Include="Stateless" Version="5.14.0"/>
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="General\" />
+        <Folder Include="General\"/>
     </ItemGroup>
 
 </Project>

@@ -28,7 +28,7 @@ namespace SpaceTrading.Production.Components.ResourceStorage
         {
             Volume += extraVolumeRequired;
         }
-        
+
         public bool WillFit(int volume)
         {
             return Volume - VolumeTaken >= volume;
@@ -36,7 +36,8 @@ namespace SpaceTrading.Production.Components.ResourceStorage
 
         public bool HasAvailable(ResourceQuantity resourceQuantity)
         {
-            return Storage.ContainsKey(resourceQuantity.Resource) && Storage[resourceQuantity.Resource].HasAmount(resourceQuantity);
+            return Storage.ContainsKey(resourceQuantity.Resource) &&
+                   Storage[resourceQuantity.Resource].HasAmount(resourceQuantity);
         }
 
         public bool TryAdd(ResourceQuantity resourceQuantity)

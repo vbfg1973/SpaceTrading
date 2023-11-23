@@ -31,22 +31,24 @@ namespace SpaceTrading.Production.Systems
             var storage = _storageComponentMapper.Get(entityId);
 
             if (production.CurrentState == ResourceProductionState.InProgress) return;
-            
-            var productionStateRunner = ProductionStateRunner(production.CurrentState, production, storage);
+
+            var productionStateRunner = ProductionStateStrategy(production.CurrentState, production, storage);
             productionStateRunner.Run();
         }
 
-        private static IProductionStateRunner ProductionStateRunner(ResourceProductionState resourceProductionState, ResourceProductionComponent production, ResourceStorageComponent storage)
+        private static IProductionStateStrategy ProductionStateStrategy(ResourceProductionState resourceProductionState,
+            ResourceProductionComponent production, ResourceStorageComponent storage)
         {
             switch (resourceProductionState)
             {
                 case ResourceProductionState.ProductionRunCompleted:
-                    return new ProductionRunCompletedProductionStateRunner(production, storage);
+                    return new ProductionRunCompletedProductionStateStrategy(production, storage);
                 case ResourceProductionState.ReadyToStart:
-                    return new ReadyToStartProductionStateRunner(production, storage);
+                    return new ReadyToStartProductionStateStrategy(production, storage);
                 case ResourceProductionState.InProgress:
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(resourceProductionState), resourceProductionState, null);
+                    throw new ArgumentOutOfRangeException(nameof(resourceProductionState), resourceProductionState,
+                        null);
             }
         }
     }

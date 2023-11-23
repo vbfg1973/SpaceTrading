@@ -4,17 +4,18 @@ using SpaceTrading.Production.Components.ResourceStorage;
 
 namespace SpaceTrading.Production.Systems.Production.ProductionStateRunners
 {
-    public class ReadyToStartProductionStateRunner : IProductionStateRunner
+    public class ReadyToStartProductionStateStrategy : IProductionStateStrategy
     {
         private readonly ResourceProductionComponent _productionComponent;
         private readonly ResourceStorageComponent _storageComponent;
 
-        public ReadyToStartProductionStateRunner(ResourceProductionComponent productionComponent, ResourceStorageComponent storageComponent)
+        public ReadyToStartProductionStateStrategy(ResourceProductionComponent productionComponent,
+            ResourceStorageComponent storageComponent)
         {
             _productionComponent = productionComponent;
             _storageComponent = storageComponent;
         }
-        
+
         public void Run()
         {
             if (!TryGetIngredientsFromStorage(out var ingredients))
