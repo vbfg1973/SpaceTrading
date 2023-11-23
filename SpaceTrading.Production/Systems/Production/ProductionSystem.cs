@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using MonoGame.Extended;
 using MonoGame.Extended.Entities;
 using MonoGame.Extended.Entities.Systems;
 using SpaceTrading.Production.Components;
@@ -8,7 +7,7 @@ using SpaceTrading.Production.Components.ResourceProduction.StateMachine;
 using SpaceTrading.Production.Components.ResourceStorage;
 using SpaceTrading.Production.Systems.Production.ProductionStateRunners;
 
-namespace SpaceTrading.Production.Systems
+namespace SpaceTrading.Production.Systems.Production
 {
     public static class ProductionStateStrategyFactory
     {
@@ -31,8 +30,7 @@ namespace SpaceTrading.Production.Systems
 
     public class ProductionSystem : EntityProcessingSystem
     {
-        private ComponentMapper<ResourceProductionComponent> _productionComponentMapper = null!;
-        private ComponentMapper<ResourceStorageComponent> _storageComponentMapper = null!;
+        private IComponentMapperService _mapperService;
 
         public ProductionSystem() : base(Aspect.All(typeof(ResourceProductionComponent),
             typeof(ResourceStorageComponent), typeof(ProductionFlagComponent)))
@@ -41,27 +39,12 @@ namespace SpaceTrading.Production.Systems
 
         public override void Initialize(IComponentMapperService mapperService)
         {
-            _productionComponentMapper = mapperService.GetMapper<ResourceProductionComponent>();
-            _storageComponentMapper = mapperService.GetMapper<ResourceStorageComponent>();
+            _mapperService = mapperService;
         }
 
         public override void Process(GameTime gameTime, int entityId)
         {
-            var production = _productionComponentMapper.Get(entityId);
-            var storage = _storageComponentMapper.Get(entityId);
-
-            ProcessComponents(gameTime.GetElapsedSeconds(), production, storage);
-        }
-
-        public static void ProcessComponents(float elapsedSeconds, ResourceProductionComponent production,
-            ResourceStorageComponent storage)
-        {
-            production.Update(elapsedSeconds);
-
-            if (production.CurrentState == ResourceProductionState.InProgress) return;
-
-            var productionStateRunner = ProductionStateStrategyFactory.Create(production, storage);
-            productionStateRunner.Run();
+            new ProductionSystemProcessor(_mapperService, entityId);
         }
     }
 }

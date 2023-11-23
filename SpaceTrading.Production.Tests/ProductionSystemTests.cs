@@ -7,6 +7,7 @@ using SpaceTrading.Production.Components.ResourceProduction.StateMachine;
 using SpaceTrading.Production.Components.ResourceStorage;
 using SpaceTrading.Production.General.Resources;
 using SpaceTrading.Production.Systems;
+using SpaceTrading.Production.Systems.Production;
 
 namespace SpaceTrading.Production.Tests
 {
@@ -61,7 +62,7 @@ namespace SpaceTrading.Production.Tests
             foreach (var rq in recipe.Ingredients)
                 storageComponent.TryAdd(new ResourceQuantity { Resource = rq.Resource, Quantity = rq.Quantity * 10 });
 
-            ProductionSystem.ProcessComponents(1f, productionComponent, storageComponent);
+            ProductionSystemProcessor.ProcessComponents(1f, productionComponent, storageComponent);
 
             productionComponent.CurrentState.Should().Be(ResourceProductionState.InProgress);
         }
@@ -84,8 +85,8 @@ namespace SpaceTrading.Production.Tests
             foreach (var rq in recipe.Ingredients)
                 storageComponent.TryAdd(new ResourceQuantity { Resource = rq.Resource, Quantity = rq.Quantity * 10 });
 
-            ProductionSystem.ProcessComponents(1f, productionComponent, storageComponent);
-            ProductionSystem.ProcessComponents(recipe.TimeTaken, productionComponent, storageComponent);
+            ProductionSystemProcessor.ProcessComponents(1f, productionComponent, storageComponent);
+            ProductionSystemProcessor.ProcessComponents(recipe.TimeTaken, productionComponent, storageComponent);
 
             productionComponent.CurrentState.Should().Be(ResourceProductionState.ReadyToStart);
         }

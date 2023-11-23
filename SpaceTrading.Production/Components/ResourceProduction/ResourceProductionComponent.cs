@@ -26,9 +26,9 @@ namespace SpaceTrading.Production.Components.ResourceProduction
 
         public ResourceProductionState CurrentState { get; set; } = ResourceProductionState.ReadyToStart;
 
-        public void Update(float timePassed)
+        public void Update(float elapsedSeconds)
         {
-            TimeRemaining -= timePassed;
+            TimeRemaining -= elapsedSeconds;
 
             if (TimeRemaining <= 0 && CurrentState == ResourceProductionState.InProgress)
                 _stateMachine.Fire(ResourceProductionTrigger.Completed);

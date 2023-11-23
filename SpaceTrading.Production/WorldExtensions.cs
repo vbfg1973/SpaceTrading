@@ -3,7 +3,7 @@ using SpaceTrading.Production.Components;
 using SpaceTrading.Production.Components.ResourceProduction;
 using SpaceTrading.Production.Components.ResourceProduction.Recipes;
 using SpaceTrading.Production.Components.ResourceStorage;
-using SpaceTrading.Production.Systems;
+using SpaceTrading.Production.Systems.Production;
 
 namespace SpaceTrading.Production
 {
