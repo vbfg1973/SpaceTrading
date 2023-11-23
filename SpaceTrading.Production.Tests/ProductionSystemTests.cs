@@ -1,9 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using FakeItEasy;
 using FluentAssertions;
-using Microsoft.Xna.Framework;
-using MonoGame.Extended.Entities;
 using SpaceTrading.Production.Components.ResourceProduction;
 using SpaceTrading.Production.Components.ResourceProduction.Recipes;
 using SpaceTrading.Production.Components.ResourceProduction.StateMachine;
@@ -47,7 +44,7 @@ namespace SpaceTrading.Production.Tests
             productionComponent.Update(0.1717f);
             productionComponent.CurrentState.Should().Be(ResourceProductionState.ReadyToStart);
         }
-        
+
         [Theory]
         [InlineData("axe")]
         [InlineData("energy")]
@@ -59,37 +56,37 @@ namespace SpaceTrading.Production.Tests
             var recipe = ReadProductionRecipeFromResourceName(recipeResourceName);
 
             var productionComponent = new ResourceProductionComponent(recipe);
-            var storageComponent = new ResourceStorageComponent(productionComponent.Recipe.SingleRunVolumeRequired * 100);
+            var storageComponent =
+                new ResourceStorageComponent(productionComponent.Recipe.SingleRunVolumeRequired * 100);
             foreach (var rq in recipe.Ingredients)
-            {
-                storageComponent.TryAdd(new ResourceQuantity() { Resource = rq.Resource, Quantity = rq.Quantity * 10 });
-            }
+                storageComponent.TryAdd(new ResourceQuantity { Resource = rq.Resource, Quantity = rq.Quantity * 10 });
 
             ProductionSystem.ProcessComponents(1f, productionComponent, storageComponent);
-            
+
             productionComponent.CurrentState.Should().Be(ResourceProductionState.InProgress);
         }
-        
+
         [Theory]
         [InlineData("axe")]
         [InlineData("energy")]
         [InlineData("iron")]
         [InlineData("ore")]
         [InlineData("wood")]
-        public void GivenRecipeNewProductionComponentsWithAllTimeElapsedAndStorageAvailableForCompletedProductionShouldBeReadyToStart(string recipeResourceName)
+        public void
+            GivenRecipeNewProductionComponentsWithAllTimeElapsedAndStorageAvailableForCompletedProductionShouldBeReadyToStart(
+                string recipeResourceName)
         {
             var recipe = ReadProductionRecipeFromResourceName(recipeResourceName);
 
             var productionComponent = new ResourceProductionComponent(recipe);
-            var storageComponent = new ResourceStorageComponent(productionComponent.Recipe.SingleRunVolumeRequired * 100);
+            var storageComponent =
+                new ResourceStorageComponent(productionComponent.Recipe.SingleRunVolumeRequired * 100);
             foreach (var rq in recipe.Ingredients)
-            {
-                storageComponent.TryAdd(new ResourceQuantity() { Resource = rq.Resource, Quantity = rq.Quantity * 10 });
-            }
+                storageComponent.TryAdd(new ResourceQuantity { Resource = rq.Resource, Quantity = rq.Quantity * 10 });
 
             ProductionSystem.ProcessComponents(1f, productionComponent, storageComponent);
             ProductionSystem.ProcessComponents(recipe.TimeTaken, productionComponent, storageComponent);
-            
+
             productionComponent.CurrentState.Should().Be(ResourceProductionState.ReadyToStart);
         }
 

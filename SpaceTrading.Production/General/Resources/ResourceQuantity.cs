@@ -7,11 +7,6 @@
 
         public int Volume => (int)Resource.Size * Quantity;
 
-        public bool HasAmount(ResourceQuantity resourceQuantity)
-        {
-            return Resource == resourceQuantity.Resource && Quantity >= resourceQuantity.Quantity;
-        }
-
         public bool Equals(ResourceQuantity? other)
         {
             if (ReferenceEquals(null, other)) return false;
@@ -19,11 +14,16 @@
             return Resource.Equals(other.Resource) && Quantity == other.Quantity;
         }
 
+        public bool HasAmount(ResourceQuantity resourceQuantity)
+        {
+            return Resource == resourceQuantity.Resource && Quantity >= resourceQuantity.Quantity;
+        }
+
         public override bool Equals(object? obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
+            if (obj.GetType() != GetType()) return false;
             return Equals((ResourceQuantity)obj);
         }
 

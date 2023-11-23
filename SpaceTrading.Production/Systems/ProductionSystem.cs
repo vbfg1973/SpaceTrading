@@ -12,7 +12,8 @@ namespace SpaceTrading.Production.Systems
 {
     public static class ProductionStateStrategyFactory
     {
-        public static IProductionStateStrategy Create(ResourceProductionComponent production, ResourceStorageComponent storage)
+        public static IProductionStateStrategy Create(ResourceProductionComponent production,
+            ResourceStorageComponent storage)
         {
             switch (production.CurrentState)
             {
@@ -48,7 +49,7 @@ namespace SpaceTrading.Production.Systems
         {
             var production = _productionComponentMapper.Get(entityId);
             var storage = _storageComponentMapper.Get(entityId);
-            
+
             ProcessComponents(gameTime.GetElapsedSeconds(), production, storage);
         }
 
@@ -56,7 +57,7 @@ namespace SpaceTrading.Production.Systems
             ResourceStorageComponent storage)
         {
             production.Update(elapsedSeconds);
-            
+
             if (production.CurrentState == ResourceProductionState.InProgress) return;
 
             var productionStateRunner = ProductionStateStrategyFactory.Create(production, storage);
