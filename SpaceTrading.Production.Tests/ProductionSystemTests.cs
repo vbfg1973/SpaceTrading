@@ -6,7 +6,6 @@ using SpaceTrading.Production.Components.ResourceProduction.Recipes;
 using SpaceTrading.Production.Components.ResourceProduction.StateMachine;
 using SpaceTrading.Production.Components.ResourceStorage;
 using SpaceTrading.Production.General.Resources;
-using SpaceTrading.Production.Systems;
 using SpaceTrading.Production.Systems.Production;
 
 namespace SpaceTrading.Production.Tests
