@@ -9,16 +9,6 @@ namespace SpaceTrading.Production.Data.TypeConfiguration
         public void Configure(EntityTypeBuilder<Resource> builder)
         {
             builder.HasKey(x => x.Id);
-
-            builder.HasOne<ResourceSize>()
-                .WithMany(x => x.Resources)
-                .HasForeignKey(x => x.ResourceSizeId)
-                .OnDelete(DeleteBehavior.ClientSetNull);
-            
-            builder.HasOne<ResourceCategory>()
-                .WithMany(x => x.Resources)
-                .HasForeignKey(x => x.ResourceCategoryId)
-                .OnDelete(DeleteBehavior.ClientSetNull);
         }
     }
 }
