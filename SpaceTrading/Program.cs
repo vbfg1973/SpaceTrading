@@ -1,10 +1,16 @@
-﻿namespace SpaceTrading;
+﻿using System;
 
-public static class Program
+namespace SpaceTrading
 {
-    [STAThread]
-    private static void Main()
+    public static class Program
     {
-        using (var game = new Game1()) game.Run();
+        [STAThread]
+        private static void Main()
+        {
+            using (var game = new Game1())
+            {
+                game.Run();
+            }
+        }
     }
 }

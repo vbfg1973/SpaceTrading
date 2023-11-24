@@ -1,11 +1,12 @@
-﻿namespace SpaceTrading.Production.General.Resources;
-
-public enum ResourceSize
+﻿namespace SpaceTrading.Production.General.Resources
 {
-    Tiny = 1,
-    Small = 3,
-    Medium = 5,
-    Large = 10,
-    Huge = 20,
-    Enormous = 50
+    public enum ResourceSize
+    {
+        Tiny = 1,
+        Small = 3,
+        Medium = 5,
+        Large = 10,
+        Huge = 20,
+        Enormous = 50
+    }
 }

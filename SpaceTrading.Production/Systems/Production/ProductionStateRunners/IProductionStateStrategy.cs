@@ -1,6 +1,7 @@
-﻿namespace SpaceTrading.Production.Systems.Production.ProductionStateRunners;
-
-public interface IProductionStateStrategy
+﻿namespace SpaceTrading.Production.Systems.Production.ProductionStateRunners
 {
-    public void Run();
+    public interface IProductionStateStrategy
+    {
+        public void Run();
+    }
 }

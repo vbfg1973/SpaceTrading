@@ -3,80 +3,81 @@ using SpaceTrading.Production.Components.ResourceProduction.StateMachine;
 using SpaceTrading.Production.General.Resources;
 using Stateless;
 
-namespace SpaceTrading.Production.Components.ResourceProduction;
-
-public class ResourceProductionComponent
+namespace SpaceTrading.Production.Components.ResourceProduction
 {
-    private readonly StateMachine<ResourceProductionState, ResourceProductionTrigger> _stateMachine;
-
-    public ResourceProductionComponent(ProductionRecipe recipe)
+    public class ResourceProductionComponent
     {
-        Recipe = recipe;
-        ResetTimeRemaining();
+        private readonly StateMachine<ResourceProductionState, ResourceProductionTrigger> _stateMachine;
 
-        _stateMachine =
-            new StateMachine<ResourceProductionState, ResourceProductionTrigger>(() => CurrentState,
-                s => CurrentState = s);
+        public ResourceProductionComponent(ProductionRecipe recipe)
+        {
+            Recipe = recipe;
+            ResetTimeRemaining();
 
-        ConfigureStateMachine();
-    }
+            _stateMachine =
+                new StateMachine<ResourceProductionState, ResourceProductionTrigger>(() => CurrentState,
+                    s => CurrentState = s);
 
-    public ProductionRecipe Recipe { get; set; }
-    public float TimeRemaining { get; set; }
+            ConfigureStateMachine();
+        }
 
-    public ResourceProductionState CurrentState { get; set; } = ResourceProductionState.ReadyToStart;
+        public ProductionRecipe Recipe { get; set; }
+        public float TimeRemaining { get; set; }
 
-    public void Update(float elapsedSeconds)
-    {
-        TimeRemaining -= elapsedSeconds;
+        public ResourceProductionState CurrentState { get; set; } = ResourceProductionState.ReadyToStart;
 
-        if (TimeRemaining <= 0 && CurrentState == ResourceProductionState.InProgress)
-            _stateMachine.Fire(ResourceProductionTrigger.Completed);
-    }
+        public void Update(float elapsedSeconds)
+        {
+            TimeRemaining -= elapsedSeconds;
 
-    public bool TryStartProduction(ProductionRecipeIngredients ingredients)
-    {
-        // TODO - Need to make class IEquatable!
-        if (CurrentState == ResourceProductionState.ReadyToStart && ingredients == Recipe.Ingredients)
-            _stateMachine.Fire(ResourceProductionTrigger.Start);
+            if (TimeRemaining <= 0 && CurrentState == ResourceProductionState.InProgress)
+                _stateMachine.Fire(ResourceProductionTrigger.Completed);
+        }
 
-        return CurrentState == ResourceProductionState.InProgress;
-    }
+        public bool TryStartProduction(ProductionRecipeIngredients ingredients)
+        {
+            // TODO - Need to make class IEquatable!
+            if (CurrentState == ResourceProductionState.ReadyToStart && ingredients == Recipe.Ingredients)
+                _stateMachine.Fire(ResourceProductionTrigger.Start);
 
-    public bool TryGetCompletedResource(out ResourceQuantity resourceQuantity)
-    {
-        resourceQuantity = null!;
+            return CurrentState == ResourceProductionState.InProgress;
+        }
 
-        if (CurrentState != ResourceProductionState.ProductionRunCompleted)
-            return false;
+        public bool TryGetCompletedResource(out ResourceQuantity resourceQuantity)
+        {
+            resourceQuantity = null!;
 
-        resourceQuantity = Recipe.ResourceQuantity;
-        _stateMachine.Fire(ResourceProductionTrigger.CompletedResourcesRemoved);
+            if (CurrentState != ResourceProductionState.ProductionRunCompleted)
+                return false;
 
-        return CurrentState == ResourceProductionState.ReadyToStart;
-    }
+            resourceQuantity = Recipe.ResourceQuantity;
+            _stateMachine.Fire(ResourceProductionTrigger.CompletedResourcesRemoved);
 
-    private void ConfigureStateMachine()
-    {
-        _stateMachine.Configure(ResourceProductionState.ReadyToStart)
-            .Permit(ResourceProductionTrigger.Start, ResourceProductionState.InProgress)
-            .Ignore(ResourceProductionTrigger.Completed)
-            .Ignore(ResourceProductionTrigger.CompletedResourcesRemoved);
+            return CurrentState == ResourceProductionState.ReadyToStart;
+        }
 
-        _stateMachine.Configure(ResourceProductionState.InProgress)
-            .Permit(ResourceProductionTrigger.Completed, ResourceProductionState.ProductionRunCompleted)
-            .Ignore(ResourceProductionTrigger.Start)
-            .Ignore(ResourceProductionTrigger.CompletedResourcesRemoved)
-            .OnEntry(ResetTimeRemaining);
+        private void ConfigureStateMachine()
+        {
+            _stateMachine.Configure(ResourceProductionState.ReadyToStart)
+                .Permit(ResourceProductionTrigger.Start, ResourceProductionState.InProgress)
+                .Ignore(ResourceProductionTrigger.Completed)
+                .Ignore(ResourceProductionTrigger.CompletedResourcesRemoved);
 
-        _stateMachine.Configure(ResourceProductionState.ProductionRunCompleted)
-            .Permit(ResourceProductionTrigger.CompletedResourcesRemoved, ResourceProductionState.ReadyToStart)
-            .Ignore(ResourceProductionTrigger.Start)
-            .Ignore(ResourceProductionTrigger.Completed);
-    }
+            _stateMachine.Configure(ResourceProductionState.InProgress)
+                .Permit(ResourceProductionTrigger.Completed, ResourceProductionState.ProductionRunCompleted)
+                .Ignore(ResourceProductionTrigger.Start)
+                .Ignore(ResourceProductionTrigger.CompletedResourcesRemoved)
+                .OnEntry(ResetTimeRemaining);
 
-    private void ResetTimeRemaining()
-    {
-        TimeRemaining = Recipe.TimeTaken;
+            _stateMachine.Configure(ResourceProductionState.ProductionRunCompleted)
+                .Permit(ResourceProductionTrigger.CompletedResourcesRemoved, ResourceProductionState.ReadyToStart)
+                .Ignore(ResourceProductionTrigger.Start)
+                .Ignore(ResourceProductionTrigger.Completed);
+        }
+
+        private void ResetTimeRemaining()
+        {
+            TimeRemaining = Recipe.TimeTaken;
+        }
     }
 }

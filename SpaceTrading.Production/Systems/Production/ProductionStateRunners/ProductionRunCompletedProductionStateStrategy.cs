@@ -1,41 +1,42 @@
 ﻿using SpaceTrading.Production.Components.ResourceProduction;
 using SpaceTrading.Production.Components.ResourceStorage;
 
-namespace SpaceTrading.Production.Systems.Production.ProductionStateRunners;
-
-public class ProductionRunCompletedProductionStateStrategy : IProductionStateStrategy
+namespace SpaceTrading.Production.Systems.Production.ProductionStateRunners
 {
-    private readonly ResourceProductionComponent _productionComponent;
-    private readonly ResourceStorageComponent _storageComponent;
-
-    public ProductionRunCompletedProductionStateStrategy(ResourceProductionComponent productionComponent,
-        ResourceStorageComponent storageComponent)
+    public class ProductionRunCompletedProductionStateStrategy : IProductionStateStrategy
     {
-        _productionComponent = productionComponent;
-        _storageComponent = storageComponent;
-    }
+        private readonly ResourceProductionComponent _productionComponent;
+        private readonly ResourceStorageComponent _storageComponent;
 
-    public void Run()
-    {
-        if (!_storageComponent.WillFit(_productionComponent.Recipe.Ingredients.Volume))
+        public ProductionRunCompletedProductionStateStrategy(ResourceProductionComponent productionComponent,
+            ResourceStorageComponent storageComponent)
         {
-            Console.WriteLine(
-                $"Ingredients volume ({_productionComponent.Recipe.Ingredients.Volume}) will not fit remaining storage ({_storageComponent.VolumeRemaining})");
-            return;
+            _productionComponent = productionComponent;
+            _storageComponent = storageComponent;
         }
 
-        if (!_productionComponent.TryGetCompletedResource(out var resourceQuantity))
+        public void Run()
         {
-            Console.WriteLine("Cannot get completed production");
-            return;
-        }
+            if (!_storageComponent.WillFit(_productionComponent.Recipe.Ingredients.Volume))
+            {
+                Console.WriteLine(
+                    $"Ingredients volume ({_productionComponent.Recipe.Ingredients.Volume}) will not fit remaining storage ({_storageComponent.VolumeRemaining})");
+                return;
+            }
 
-        if (_storageComponent.TryAdd(resourceQuantity))
-        {
-            Console.WriteLine("Completed production added to storage");
-            return;
-        }
+            if (!_productionComponent.TryGetCompletedResource(out var resourceQuantity))
+            {
+                Console.WriteLine("Cannot get completed production");
+                return;
+            }
 
-        Console.WriteLine("Cannot add completed production to storage");
+            if (_storageComponent.TryAdd(resourceQuantity))
+            {
+                Console.WriteLine("Completed production added to storage");
+                return;
+            }
+
+            Console.WriteLine("Cannot add completed production to storage");
+        }
     }
 }

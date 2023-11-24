@@ -1,44 +1,45 @@
-﻿namespace SpaceTrading.Production.General.Resources;
-
-public class ResourceQuantity : IEquatable<ResourceQuantity>
+﻿namespace SpaceTrading.Production.General.Resources
 {
-    public Resource Resource { get; init; } = null!;
-    public float Quantity { get; set; }
-
-    public float Volume => (int)Resource.Size * Quantity;
-
-    public bool Equals(ResourceQuantity? other)
+    public class ResourceQuantity : IEquatable<ResourceQuantity>
     {
-        if (ReferenceEquals(null, other)) return false;
-        if (ReferenceEquals(this, other)) return true;
-        return Resource.Equals(other.Resource) && Quantity == other.Quantity;
-    }
+        public Resource Resource { get; init; } = null!;
+        public float Quantity { get; set; }
 
-    public bool HasAmount(ResourceQuantity resourceQuantity)
-    {
-        return Resource == resourceQuantity.Resource && Quantity >= resourceQuantity.Quantity;
-    }
+        public float Volume => (int)Resource.Size * Quantity;
 
-    public override bool Equals(object? obj)
-    {
-        if (ReferenceEquals(null, obj)) return false;
-        if (ReferenceEquals(this, obj)) return true;
-        if (obj.GetType() != GetType()) return false;
-        return Equals((ResourceQuantity)obj);
-    }
+        public bool Equals(ResourceQuantity? other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return Resource.Equals(other.Resource) && Quantity == other.Quantity;
+        }
 
-    public override int GetHashCode()
-    {
-        return HashCode.Combine(Resource, Quantity);
-    }
+        public bool HasAmount(ResourceQuantity resourceQuantity)
+        {
+            return Resource == resourceQuantity.Resource && Quantity >= resourceQuantity.Quantity;
+        }
 
-    public static bool operator ==(ResourceQuantity? left, ResourceQuantity? right)
-    {
-        return Equals(left, right);
-    }
+        public override bool Equals(object? obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals((ResourceQuantity)obj);
+        }
 
-    public static bool operator !=(ResourceQuantity? left, ResourceQuantity? right)
-    {
-        return !Equals(left, right);
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Resource, Quantity);
+        }
+
+        public static bool operator ==(ResourceQuantity? left, ResourceQuantity? right)
+        {
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(ResourceQuantity? left, ResourceQuantity? right)
+        {
+            return !Equals(left, right);
+        }
     }
 }

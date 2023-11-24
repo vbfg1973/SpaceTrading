@@ -7,41 +7,44 @@ using SpaceTrading.Production.Components.ResourceProduction.StateMachine;
 using SpaceTrading.Production.Components.ResourceStorage;
 using SpaceTrading.Production.Systems.Production.ProductionStateRunners;
 
-namespace SpaceTrading.Production.Systems.Production;
-
-public static class ProductionStateStrategyFactory
+namespace SpaceTrading.Production.Systems.Production
 {
-    public static IProductionStateStrategy Create(ResourceProductionComponent production,
-        ResourceStorageComponent storage)
+    public static class ProductionStateStrategyFactory
     {
-        switch (production.CurrentState)
+        public static IProductionStateStrategy Create(ResourceProductionComponent production,
+            ResourceStorageComponent storage)
         {
-            case ResourceProductionState.ProductionRunCompleted:
-                return new ProductionRunCompletedProductionStateStrategy(production, storage);
-            case ResourceProductionState.ReadyToStart:
-                return new ReadyToStartProductionStateStrategy(production, storage);
-            case ResourceProductionState.InProgress:
-            default:
-                throw new ArgumentOutOfRangeException(nameof(production.CurrentState), production.CurrentState,
-                    null);
+            switch (production.CurrentState)
+            {
+                case ResourceProductionState.ProductionRunCompleted:
+                    return new ProductionRunCompletedProductionStateStrategy(production, storage);
+                case ResourceProductionState.ReadyToStart:
+                    return new ReadyToStartProductionStateStrategy(production, storage);
+                case ResourceProductionState.InProgress:
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(production.CurrentState), production.CurrentState,
+                        null);
+            }
         }
     }
-}
 
-public class ProductionSystem : EntityProcessingSystem
-{
-    private IComponentMapperService _mapperService;
-
-    public ProductionSystem() : base(Aspect.All(typeof(ResourceProductionComponent),
-        typeof(ResourceStorageComponent), typeof(ProductionFlagComponent))) { }
-
-    public override void Initialize(IComponentMapperService mapperService)
+    public class ProductionSystem : EntityProcessingSystem
     {
-        _mapperService = mapperService;
-    }
+        private IComponentMapperService _mapperService;
 
-    public override void Process(GameTime gameTime, int entityId)
-    {
-        new ProductionSystemProcessor(_mapperService, entityId);
+        public ProductionSystem() : base(Aspect.All(typeof(ResourceProductionComponent),
+            typeof(ResourceStorageComponent), typeof(ProductionFlagComponent)))
+        {
+        }
+
+        public override void Initialize(IComponentMapperService mapperService)
+        {
+            _mapperService = mapperService;
+        }
+
+        public override void Process(GameTime gameTime, int entityId)
+        {
+            new ProductionSystemProcessor(_mapperService, entityId);
+        }
     }
 }

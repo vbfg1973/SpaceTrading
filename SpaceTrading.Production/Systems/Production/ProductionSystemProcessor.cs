@@ -3,37 +3,38 @@ using SpaceTrading.Production.Components.ResourceProduction;
 using SpaceTrading.Production.Components.ResourceProduction.StateMachine;
 using SpaceTrading.Production.Components.ResourceStorage;
 
-namespace SpaceTrading.Production.Systems.Production;
-
-public class ProductionSystemProcessor
+namespace SpaceTrading.Production.Systems.Production
 {
-    private readonly int _entityId;
-    private readonly IComponentMapperService _mapperService;
-    private readonly ResourceProductionComponent _productionComponent;
-    private readonly ResourceStorageComponent _storageComponent;
-
-    public ProductionSystemProcessor(IComponentMapperService mapperService, int entityId)
+    public class ProductionSystemProcessor
     {
-        _mapperService = mapperService;
-        _entityId = entityId;
+        private readonly int _entityId;
+        private readonly IComponentMapperService _mapperService;
+        private readonly ResourceProductionComponent _productionComponent;
+        private readonly ResourceStorageComponent _storageComponent;
 
-        _productionComponent = _mapperService.GetMapper<ResourceProductionComponent>().Get(entityId);
-        _storageComponent = _mapperService.GetMapper<ResourceStorageComponent>().Get(entityId);
-    }
+        public ProductionSystemProcessor(IComponentMapperService mapperService, int entityId)
+        {
+            _mapperService = mapperService;
+            _entityId = entityId;
 
-    public void Run(float elapsedSeconds)
-    {
-        ProcessComponents(elapsedSeconds, _productionComponent, _storageComponent);
-    }
+            _productionComponent = _mapperService.GetMapper<ResourceProductionComponent>().Get(entityId);
+            _storageComponent = _mapperService.GetMapper<ResourceStorageComponent>().Get(entityId);
+        }
 
-    public static void ProcessComponents(float elapsedSeconds, ResourceProductionComponent production,
-        ResourceStorageComponent storage)
-    {
-        production.Update(elapsedSeconds);
+        public void Run(float elapsedSeconds)
+        {
+            ProcessComponents(elapsedSeconds, _productionComponent, _storageComponent);
+        }
 
-        if (production.CurrentState == ResourceProductionState.InProgress) return;
+        public static void ProcessComponents(float elapsedSeconds, ResourceProductionComponent production,
+            ResourceStorageComponent storage)
+        {
+            production.Update(elapsedSeconds);
 
-        var productionStateRunner = ProductionStateStrategyFactory.Create(production, storage);
-        productionStateRunner.Run();
+            if (production.CurrentState == ResourceProductionState.InProgress) return;
+
+            var productionStateRunner = ProductionStateStrategyFactory.Create(production, storage);
+            productionStateRunner.Run();
+        }
     }
 }

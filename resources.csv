@@ -37,5 +37,8 @@ Computer,Technology,Tiny,1,2,100,Energy,50,Microchips,6,,,,,,
 Microchips,Technology,Tiny,1,4,30,Energy,400,Silicon,20,,,,,,
 Quantum Tubes,Technology,Medium,5,24,40,Energy,800,Ore,100,Silicon,20,Microchips,24,,
 WeaponAiming,Technology,Tiny,1,10,100,Energy,50,Computer,1,Ore,1,Silicon,1,Microchips,1
-EnergyEmissionSite,Technology,Small,2,10,100,Energy,50,Quantum Tubes,5,Ore,1,Silicon,1,,
-KineticEmissionSite,Technology,Small,2,10,100,Energy,100,Ore,100,Silicon,10,Microchips,3,,
+EnergyEmissionSite,Technology,Small,2,10,100,Energy,50,Quantum Tubes,5,Ore,1,Crystals,1,,
+KineticEmissionSite,Technology,Small,2,10,100,Energy,100,Ore,100,Crystals,10,Microchips,3,,
+EnergyTurret,Naval,Large,8,5,180,Energy,300,Ore,400,EnergyEmissionSite,1,WeaponAiming,1,Computer,1
+KineticTurret,Naval,Large,8,5,180,Energy,300,Ore,400,KineticEmissionSite,1,WeaponAiming,1,Computer,1
+PlasmaThrower,Weapons,Medium,5,5,300,Energy,300,EnergyTurret,5,Microchips,10,Quantum Tubes,1,Computer,1

@@ -1,19 +1,22 @@
 ﻿using SpaceTrading.Production.General.Resources;
 
-namespace SpaceTrading.Production.Components.ResourceProduction.Recipes;
-
-public record ProductionRecipe(ResourceQuantity ResourceQuantity, ProductionRecipeIngredients Ingredients,
-    float TimeTaken)
+namespace SpaceTrading.Production.Components.ResourceProduction.Recipes
 {
-    public float SingleRunVolumeRequired => ResourceQuantity.Volume + Ingredients.Volume;
-
-    public bool TryGetScaledIngredients(ResourceQuantity resourceQuantity, out ProductionRecipeIngredients productionRecipeIngredients)
+    public record ProductionRecipe(ResourceQuantity ResourceQuantity, ProductionRecipeIngredients Ingredients,
+        float TimeTaken)
     {
-        var scalar = resourceQuantity.Quantity / ResourceQuantity.Quantity;
+        public float SingleRunVolumeRequired => ResourceQuantity.Volume + Ingredients.Volume;
 
-        productionRecipeIngredients = new ProductionRecipeIngredients();
-        productionRecipeIngredients.AddRange(Ingredients.Select(x => new ResourceQuantity() { Resource = x.Resource, Quantity = x.Quantity * scalar }));
+        public bool TryGetScaledIngredients(ResourceQuantity resourceQuantity,
+            out ProductionRecipeIngredients productionRecipeIngredients)
+        {
+            var scalar = resourceQuantity.Quantity / ResourceQuantity.Quantity;
 
-        return true;
+            productionRecipeIngredients = new ProductionRecipeIngredients();
+            productionRecipeIngredients.AddRange(Ingredients.Select(x => new ResourceQuantity
+                { Resource = x.Resource, Quantity = x.Quantity * scalar }));
+
+            return true;
+        }
     }
 }

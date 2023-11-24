@@ -5,31 +5,32 @@ using SpaceTrading.Production.Components.ResourceProduction.Recipes;
 using SpaceTrading.Production.Components.ResourceStorage;
 using SpaceTrading.Production.Systems.Production;
 
-namespace SpaceTrading.Production;
-
-public static class WorldExtensions
+namespace SpaceTrading.Production
 {
-    public static WorldBuilder AddProductionSystems(this WorldBuilder worldBuilder)
+    public static class WorldExtensions
     {
-        worldBuilder.AddSystem(new ProductionSystem());
+        public static WorldBuilder AddProductionSystems(this WorldBuilder worldBuilder)
+        {
+            worldBuilder.AddSystem(new ProductionSystem());
 
-        return worldBuilder;
-    }
+            return worldBuilder;
+        }
 
-    public static bool DecorateEntityWithProductionFromRecipeComponents(this World world, int entityId,
-        ProductionRecipe productionRecipe)
-    {
-        const int productionRuns = 50;
+        public static bool DecorateEntityWithProductionFromRecipeComponents(this World world, int entityId,
+            ProductionRecipe productionRecipe)
+        {
+            const int productionRuns = 50;
 
-        var entity = world.GetEntity(entityId);
+            var entity = world.GetEntity(entityId);
 
-        if (entity.Has<ResourceProductionComponent>() || entity.Has<ProductionFlagComponent>() ||
-            entity.Has<ResourceStorageComponent>()) return false;
+            if (entity.Has<ResourceProductionComponent>() || entity.Has<ProductionFlagComponent>() ||
+                entity.Has<ResourceStorageComponent>()) return false;
 
-        entity.Attach(new ProductionFlagComponent());
-        entity.Attach(new ResourceProductionComponent(productionRecipe));
-        entity.Attach(new ResourceStorageComponent(productionRecipe.SingleRunVolumeRequired * productionRuns));
+            entity.Attach(new ProductionFlagComponent());
+            entity.Attach(new ResourceProductionComponent(productionRecipe));
+            entity.Attach(new ResourceStorageComponent(productionRecipe.SingleRunVolumeRequired * productionRuns));
 
-        return true;
+            return true;
+        }
     }
 }
