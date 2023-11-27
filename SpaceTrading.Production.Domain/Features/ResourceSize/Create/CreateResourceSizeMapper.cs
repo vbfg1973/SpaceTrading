@@ -1,11 +1,13 @@
 ﻿using AutoMapper;
 
-namespace SpaceTrading.Production.Domain.Features.ResourceSize.Create;
-
-public class CreateResourceSizeMapper : Profile
+namespace SpaceTrading.Production.Domain.Features.ResourceSize.Create
 {
-    public CreateResourceSizeMapper()
+    public class CreateResourceSizeMapper : Profile
     {
-        CreateMap<CreateResourceSizeDto, CreateResourceSizeCommand>();
+        public CreateResourceSizeMapper()
+        {
+            CreateMap<CreateResourceSizeDto, CreateResourceSizeCommand>();
+            CreateMap<CreateResourceSizeCommand, Data.Models.ResourceSize>();
+        }
     }
 }

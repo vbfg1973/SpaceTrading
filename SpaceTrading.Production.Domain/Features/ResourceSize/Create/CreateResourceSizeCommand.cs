@@ -1,15 +1,10 @@
 ﻿using MediatR;
 
-namespace SpaceTrading.Production.Domain.Features.ResourceSize.Create;
-
-public record CreateResourceSizeCommand : IRequest
+namespace SpaceTrading.Production.Domain.Features.ResourceSize.Create
 {
-    public CreateResourceSizeCommand(string name, int sizeModifier)
+    public class CreateResourceSizeCommand : IRequest<ResourceSizeDto>
     {
-        Name = name;
-        SizeModifier = sizeModifier;
+        public string Name { get; init; } = null!;
+        public int Size { get; init; }
     }
-
-    public string Name { get; }
-    public int SizeModifier { get; }
 }

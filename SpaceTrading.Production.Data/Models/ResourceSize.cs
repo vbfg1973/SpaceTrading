@@ -10,6 +10,7 @@ namespace SpaceTrading.Production.Data.Models
         }
 
         public string Name { get; set; }
+        public int Size { get; set; }
 
         public ICollection<Resource> Resources { get; set; }
 

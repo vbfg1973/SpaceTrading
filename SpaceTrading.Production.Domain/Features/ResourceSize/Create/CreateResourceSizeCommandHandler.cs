@@ -1,29 +1,39 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using SpaceTrading.Production.Data;
 
-namespace SpaceTrading.Production.Domain.Features.ResourceSize.Create;
-
-public class CreateResourceSizeCommandHandler : IRequestHandler<CreateResourceSizeCommand>
+namespace SpaceTrading.Production.Domain.Features.ResourceSize.Create
 {
-    private readonly SpaceTradingContext _context;
-    private readonly ILogger<CreateResourceSizeCommandHandler> _logger;
-
-    public CreateResourceSizeCommandHandler(SpaceTradingContext context, ILogger<CreateResourceSizeCommandHandler> logger)
+    public class CreateResourceSizeCommandHandler : IRequestHandler<CreateResourceSizeCommand, ResourceSizeDto>
     {
-        _context = context;
-        _logger = logger;
-    }
-    
-    public async Task Handle(CreateResourceSizeCommand request, CancellationToken cancellationToken)
-    {
-        _logger.LogTrace("{Class} {Method} {Request}", typeof(CreateResourceSizeCommandHandler), nameof(Handle), request);
+        private readonly SpaceTradingContext _context;
+        private readonly ILogger<CreateResourceSizeCommandHandler> _logger;
+        private readonly IMapper _mapper;
 
-        _context.ResourceSizes.Add(new Data.Models.ResourceSize()
+        public CreateResourceSizeCommandHandler(SpaceTradingContext context, IMapper mapper,
+            ILogger<CreateResourceSizeCommandHandler> logger)
         {
-            Name = request.Name
-        });
+            _context = context;
+            _mapper = mapper;
+            _logger = logger;
+        }
 
-        await _context.SaveChangesAsync(cancellationToken);
+        public async Task<ResourceSizeDto> Handle(CreateResourceSizeCommand request,
+            CancellationToken cancellationToken)
+        {
+            _logger.LogTrace("{Class} {Method} {Request}", typeof(CreateResourceSizeCommandHandler), nameof(Handle),
+                request);
+
+            var model = _mapper.Map<Data.Models.ResourceSize>(request);
+            
+            _context.ResourceSizes.Add(model);
+
+            await _context.SaveChangesAsync(cancellationToken);
+
+            return _mapper.Map<ResourceSizeDto>(await _context.ResourceSizes.Where(x => x.Name == request.Name)
+                .FirstAsync(cancellationToken));
+        }
     }
 }

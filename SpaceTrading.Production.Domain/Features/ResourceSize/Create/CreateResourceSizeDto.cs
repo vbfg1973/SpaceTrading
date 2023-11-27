@@ -1,7 +1,8 @@
-﻿namespace SpaceTrading.Production.Domain.Features.ResourceSize.Create;
-
-public class CreateResourceSizeDto
+﻿namespace SpaceTrading.Production.Domain.Features.ResourceSize.Create
 {
-    public string Size { get; set; } = null!;
-    public int SizeModifier { get; set; }
+    public class CreateResourceSizeDto
+    {
+        public string Name { get; set; } = null!;
+        public int Size { get; set; }
+    }
 }

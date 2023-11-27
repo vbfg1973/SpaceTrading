@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SpaceTrading.Production.Data;
 
@@ -10,9 +11,11 @@ using SpaceTrading.Production.Data;
 namespace SpaceTrading.Production.Data.Migrations
 {
     [DbContext(typeof(SpaceTradingContext))]
-    partial class SpaceTradingContextModelSnapshot : ModelSnapshot
+    [Migration("20231127222633_SizeOnResourceSize")]
+    partial class SizeOnResourceSize
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
