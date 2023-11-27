@@ -91,13 +91,11 @@ namespace SpaceTrading.Production.Data.Migrations
                     b.HasOne("SpaceTrading.Production.Data.Models.ResourceCategory", "ResourceCategory")
                         .WithMany("Resources")
                         .HasForeignKey("ResourceCategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("SpaceTrading.Production.Data.Models.ResourceSize", "ResourceSize")
                         .WithMany("Resources")
                         .HasForeignKey("ResourceSizeId")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("ResourceCategory");

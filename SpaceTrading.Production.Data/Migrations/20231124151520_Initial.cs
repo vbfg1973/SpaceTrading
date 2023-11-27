@@ -54,14 +54,12 @@ namespace SpaceTrading.Production.Data.Migrations
                         name: "FK_Resources_ResourceSizes_ResourceSizeId",
                         column: x => x.ResourceSizeId,
                         principalTable: "ResourceSizes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Resources_ResourcesCategories_ResourceCategoryId",
                         column: x => x.ResourceCategoryId,
                         principalTable: "ResourcesCategories",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
