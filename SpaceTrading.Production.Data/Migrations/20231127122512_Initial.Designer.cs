@@ -11,7 +11,7 @@ using SpaceTrading.Production.Data;
 namespace SpaceTrading.Production.Data.Migrations
 {
     [DbContext(typeof(SpaceTradingContext))]
-    [Migration("20231124151520_Initial")]
+    [Migration("20231127122512_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -20,7 +20,7 @@ namespace SpaceTrading.Production.Data.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .UseCollation("Latin1_General_CI_AS")
-                .HasAnnotation("ProductVersion", "7.0.14")
+                .HasAnnotation("ProductVersion", "8.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
