@@ -20,7 +20,7 @@ namespace SpaceTrading.Production.Domain.Features.ResourceCategory.GetAll
         
         public async Task<PagedList<ResourceCategoryDto>> Handle(PageAllResourceCategory request, CancellationToken cancellationToken)
         {
-            var queryable = _context.ResourceCategorys.OrderBy(x => x.Id);
+            var queryable = _context.ResourcesCategories.OrderBy(x => x.Id);
 
             return await PagedList<ResourceCategoryDto>.ToPagedList(_mapper.ProjectTo<ResourceCategoryDto>(queryable), request.PageParameters);
         }

@@ -6,14 +6,12 @@ namespace SpaceTrading.Production.Domain.Features.ResourceCategory.Update
         {
             Id = id;
             Name = updateResourceCategoryDto.Name;
-            Size = updateResourceCategoryDto.Size;
 
             CorrelationId = correlationId;
         }
 
         public int Id { get; init; }
         public string Name { get; init; }
-        public int Size { get; init; }
         public Guid CorrelationId { get; }
     }
 }

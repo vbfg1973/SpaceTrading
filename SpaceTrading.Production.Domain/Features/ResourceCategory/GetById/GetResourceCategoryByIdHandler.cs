@@ -32,7 +32,7 @@ namespace SpaceTrading.Production.Domain.Features.ResourceCategory.Get
                 request.CorrelationId
             );
 
-            var result = await _context.ResourceCategorys.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
+            var result = await _context.ResourcesCategories.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
             if (result != null)
             {

@@ -11,9 +11,9 @@ namespace SpaceTrading.Production.Domain.Features.ResourceSize.Update
     public class UpdateResourceSizeCommandHandler : IRequestHandler<UpdateResourceSizeCommand, ResourceSizeDto>
     {
         private readonly SpaceTradingContext _context;
-        private readonly IMediator _mediator;
-        private readonly IMapper _mapper;
         private readonly ILogger<UpdateResourceSizeCommandHandler> _logger;
+        private readonly IMapper _mapper;
+        private readonly IMediator _mediator;
 
         public UpdateResourceSizeCommandHandler(SpaceTradingContext context, IMediator mediator, IMapper mapper,
             ILogger<UpdateResourceSizeCommandHandler> logger)
@@ -24,16 +24,23 @@ namespace SpaceTrading.Production.Domain.Features.ResourceSize.Update
             _logger = logger;
         }
 
-        public async Task<ResourceSizeDto> Handle(UpdateResourceSizeCommand request, CancellationToken cancellationToken)
+        public async Task<ResourceSizeDto> Handle(UpdateResourceSizeCommand request,
+            CancellationToken cancellationToken)
         {
-            _logger.LogInformation("{Class} {Method} {Json} {CorrelationId}", typeof(UpdateResourceSizeCommand), nameof(Handle), JsonSerializer.Serialize(request), request.CorrelationId);
+            _logger.LogInformation("{Class} {Method} {Json} {CorrelationId}", typeof(UpdateResourceSizeCommand),
+                nameof(Handle), JsonSerializer.Serialize(request), request.CorrelationId);
 
             await _context.Database.BeginTransactionAsync(cancellationToken);
-            
-            if (!await _context.ResourceSizes.AnyAsync(x => x.Id == request.Id, cancellationToken: cancellationToken))
+
+            if (!await _context.ResourceSizes.AnyAsync(x => x.Id == request.Id, cancellationToken))
                 throw new NotFoundException(typeof(Data.Models.ResourceSize), request.Id);
 
-            var model = _mapper.Map<Data.Models.ResourceSize>(request);
+            var model = await _context
+                .ResourceSizes
+                .AsNoTracking()
+                .FirstAsync(resourceSize => resourceSize.Id == request.Id, cancellationToken);
+
+            model = _mapper.Map<Data.Models.ResourceSize>(request);
 
             _context.Update(model);
             await _context.SaveChangesAsync(cancellationToken);

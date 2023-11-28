@@ -2,9 +2,9 @@ namespace SpaceTrading.Production.Domain.Features.ResourceSize.Update
 {
     public class UpdateResourceSizeCommand : ICommand<ResourceSizeDto>
     {
-        public UpdateResourceSizeCommand(UpdateResourceSizeDto updateResourceSizeDto, Guid correlationId)
+        public UpdateResourceSizeCommand(int id, UpdateResourceSizeDto updateResourceSizeDto, Guid correlationId)
         {
-            Id = updateResourceSizeDto.Id;
+            Id = id;
             Name = updateResourceSizeDto.Name;
             Size = updateResourceSizeDto.Size;
 

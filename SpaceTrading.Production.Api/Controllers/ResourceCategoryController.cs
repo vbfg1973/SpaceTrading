@@ -64,6 +64,7 @@ namespace SpaceTrading.Production.Api.Controllers
         public async Task<IActionResult> CreateResourceCategory(
             [FromBody] CreateResourceCategoryCommandDto createResourceCategoryCommandDto)
         {
+            
             var validationResult = await _createCommandValidator.ValidateAsync(createResourceCategoryCommandDto);
 
             if (!validationResult.IsValid)
@@ -74,16 +75,13 @@ namespace SpaceTrading.Production.Api.Controllers
 
             var command = new CreateResourceCategoryCommand(createResourceCategoryCommandDto, GetCorrelationId());
 
-            _logger.LogInformation("{Class} {Method} {Json}", nameof(CreateResourceCategory),
-                typeof(ResourceCategoryController),
-                JsonSerializer.Serialize(command));
-
             var ResourceCategoryDto = await _mediator.Send(command);
 
             _logger.LogInformation("{Class} {Method} {Json} {CorrelationId}", 
                 typeof(ResourceCategoryController),
                 nameof(CreateResourceCategory),
-                JsonSerializer.Serialize(ResourceCategoryDto));
+                JsonSerializer.Serialize(ResourceCategoryDto),
+                command.CorrelationId.ToString());
 
             return CreatedAtAction(nameof(GetResourceCategory), new { ResourceCategoryDto.Id }, ResourceCategoryDto);
         }
@@ -110,9 +108,9 @@ namespace SpaceTrading.Production.Api.Controllers
 
             var command = new UpdateResourceCategoryCommand(id, updateResourceCategoryDto, GetCorrelationId());
 
-            var ResourceCategoryDto = await _mediator.Send(command);
+            var resourceCategoryDto = await _mediator.Send(command);
 
-            return Ok(ResourceCategoryDto);
+            return Ok(resourceCategoryDto);
         }
     }
 }

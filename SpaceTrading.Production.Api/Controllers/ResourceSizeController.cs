@@ -8,6 +8,7 @@ using SpaceTrading.Production.Domain.Features;
 using SpaceTrading.Production.Domain.Features.ResourceSize.Create;
 using SpaceTrading.Production.Domain.Features.ResourceSize.GetAll;
 using SpaceTrading.Production.Domain.Features.ResourceSize.GetById;
+using SpaceTrading.Production.Domain.Features.ResourceSize.Update;
 
 namespace SpaceTrading.Production.Api.Controllers
 {
@@ -15,18 +16,21 @@ namespace SpaceTrading.Production.Api.Controllers
     public class ResourceSizeController : ApiController
     {
         private readonly IValidator<CreateResourceSizeCommandDto> _createCommandValidator;
-        private readonly IValidator<PageParameters> _pageParametersValidator;
         private readonly ILogger<ResourceSizeController> _logger;
+        private readonly IValidator<PageParameters> _pageParametersValidator;
+        private readonly IValidator<UpdateResourceSizeDto> _updateCommandValidator;
 
         public ResourceSizeController(
             IMapper mapper,
             IMediator mediator,
             IValidator<CreateResourceSizeCommandDto> createCommandValidator,
+            IValidator<UpdateResourceSizeDto> updateCommandValidator,
             IValidator<PageParameters> pageParametersValidator,
             ILogger<ResourceSizeController> logger
         ) : base(mediator, mapper)
         {
             _createCommandValidator = createCommandValidator;
+            _updateCommandValidator = updateCommandValidator;
             _pageParametersValidator = pageParametersValidator;
             _logger = logger;
         }
@@ -57,7 +61,8 @@ namespace SpaceTrading.Production.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostResourceSize([FromBody] CreateResourceSizeCommandDto createResourceSizeCommandDto)
+        public async Task<IActionResult> CreateResourceSize(
+            [FromBody] CreateResourceSizeCommandDto createResourceSizeCommandDto)
         {
             var validationResult = await _createCommandValidator.ValidateAsync(createResourceSizeCommandDto);
 
@@ -69,17 +74,45 @@ namespace SpaceTrading.Production.Api.Controllers
 
             var command = new CreateResourceSizeCommand(createResourceSizeCommandDto, GetCorrelationId());
 
-            _logger.LogInformation("{Class} {Method} {Json}", nameof(PostResourceSize),
+            _logger.LogInformation("{Class} {Method} {Json}", nameof(CreateResourceSize),
                 typeof(ResourceSizeController),
                 JsonSerializer.Serialize(command));
 
             var resourceSizeDto = await _mediator.Send(command);
 
-            _logger.LogInformation("{Class} {Method} {Json} {CorrelationId}", nameof(PostResourceSize),
+            _logger.LogInformation("{Class} {Method} {Json} {CorrelationId}", 
                 typeof(ResourceSizeController),
+                nameof(CreateResourceSize),
                 JsonSerializer.Serialize(resourceSizeDto));
 
             return CreatedAtAction(nameof(GetResourceSize), new { resourceSizeDto.Id }, resourceSizeDto);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateResourceSize(int id, UpdateResourceSizeDto updateResourceSizeDto)
+        {
+            var correlationId = GetCorrelationId();
+            
+            _logger.LogInformation("{Class} {Method} {Json} {Id} {CorrelationId}", 
+                typeof(ResourceSizeController),
+                nameof(UpdateResourceSize),
+                id.ToString(),
+                JsonSerializer.Serialize(updateResourceSizeDto),
+                correlationId.ToString());
+            
+            var validationResult = await _updateCommandValidator.ValidateAsync(updateResourceSizeDto);
+
+            if (!validationResult.IsValid)
+            {
+                validationResult.AddToModelState(ModelState);
+                return BadRequest(ModelState);
+            }
+
+            var command = new UpdateResourceSizeCommand(id, updateResourceSizeDto, GetCorrelationId());
+
+            var resourceSizeDto = await _mediator.Send(command);
+
+            return Ok(resourceSizeDto);
         }
     }
 }
