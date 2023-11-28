@@ -35,13 +35,13 @@ namespace SpaceTrading.Production.Domain.Features.ResourceCategory.Create
 
             var model = _mapper.Map<Data.Models.ResourceCategory>(command);
 
-            if (await _context.ResourceCategorys.AnyAsync(x => x.Name == command.Name, cancellationToken))
+            if (await _context.ResourcesCategories.AnyAsync(x => x.Name == command.Name, cancellationToken))
                 throw new AlreadyExistsException(typeof(Data.Models.ResourceCategory), command.Name);
 
-            _context.ResourceCategorys.Add(model);
+            _context.ResourcesCategories.Add(model);
 
             await _context.SaveChangesAsync(cancellationToken);
-            var returnedModel = await _context.ResourceCategorys.Where(x => x.Name == command.Name)
+            var returnedModel = await _context.ResourcesCategories.Where(x => x.Name == command.Name)
                 .FirstAsync(cancellationToken);
             await transaction.CommitAsync(cancellationToken);
             return _mapper.Map<ResourceCategoryDto>(returnedModel);

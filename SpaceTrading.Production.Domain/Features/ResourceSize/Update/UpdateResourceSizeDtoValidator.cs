@@ -6,9 +6,6 @@ namespace SpaceTrading.Production.Domain.Features.ResourceSize.Update
     {
         public UpdateResourceSizeDtoValidator()
         {
-            RuleFor(x => x.Id)
-                .GreaterThanOrEqualTo(1);
-
             RuleFor(x => x.Name)
                 .NotEmpty()
                 .NotNull();

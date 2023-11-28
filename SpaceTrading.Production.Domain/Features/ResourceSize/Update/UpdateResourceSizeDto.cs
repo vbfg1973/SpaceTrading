@@ -2,6 +2,7 @@
 {
     public class UpdateResourceSizeDto
     {
-        
+        public string Name { get; init; } = null!;
+        public int Size { get; init; }
     }
 }

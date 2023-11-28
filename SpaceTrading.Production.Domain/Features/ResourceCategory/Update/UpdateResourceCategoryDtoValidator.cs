@@ -9,9 +9,6 @@ namespace SpaceTrading.Production.Domain.Features.ResourceCategory.Update
             RuleFor(x => x.Name)
                 .NotEmpty()
                 .NotNull();
-
-            RuleFor(x => x.Size)
-                .GreaterThanOrEqualTo(1);
         }
     }
 }
