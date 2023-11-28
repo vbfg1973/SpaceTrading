@@ -1,9 +1,11 @@
-﻿using AutoMapper;
+﻿using System.Text.Json;
+using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using SpaceTrading.Production.Data;
 using SpaceTrading.Production.Domain.Exceptions;
+using SpaceTrading.Production.Domain.Features.ResourceSize.GetById;
 
 namespace SpaceTrading.Production.Domain.Features.ResourceSize.Get
 {
@@ -23,11 +25,21 @@ namespace SpaceTrading.Production.Domain.Features.ResourceSize.Get
 
         public async Task<ResourceSizeDto> Handle(GetResourceSizeById request, CancellationToken cancellationToken)
         {
-            if (!await _context.ResourceSizes.AnyAsync(x => x.Id == request.Id, cancellationToken: cancellationToken))
-                throw new NotFoundException(typeof(Data.Models.ResourceSize), request.Id);
-            
-            return _mapper.Map<ResourceSizeDto>(
-                await _context.ResourceSizes.FirstAsync(x => x.Id == request.Id, cancellationToken));
+            _logger.LogInformation("{Class} {Method} {Json} {CorrelationId}",
+                typeof(GetResourceSizeByIdHandler),
+                nameof(Handle),
+                JsonSerializer.Serialize(request),
+                request.CorrelationId
+            );
+
+            var result = await _context.ResourceSizes.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
+
+            if (result != null)
+            {
+                return _mapper.Map<ResourceSizeDto>(result);
+            }
+
+            throw new NotFoundException(typeof(Data.Models.ResourceSize), request.Id);
         }
     }
 }
