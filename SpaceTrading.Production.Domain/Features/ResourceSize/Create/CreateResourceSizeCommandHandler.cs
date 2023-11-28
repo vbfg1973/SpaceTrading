@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Text.Json;
+using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -21,25 +22,26 @@ namespace SpaceTrading.Production.Domain.Features.ResourceSize.Create
             _logger = logger;
         }
 
-        public async Task<ResourceSizeDto> Handle(CreateResourceSizeCommand request,
+        public async Task<ResourceSizeDto> Handle(CreateResourceSizeCommand command,
             CancellationToken cancellationToken)
         {
-            _logger.LogTrace("{Class} {Method} {Request}", typeof(CreateResourceSizeCommandHandler), nameof(Handle),
-                request);
-            
-            await using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
-            
-            var model = _mapper.Map<Data.Models.ResourceSize>(request);
+            _logger.LogInformation("{Class} {Method} {Request}", 
+                typeof(CreateResourceSizeCommandHandler),
+                nameof(Handle),
+                JsonSerializer.Serialize(command),
+                command.CorrelationId);
 
-            if (await _context.ResourceSizes.AnyAsync(x => x.Name == request.Name, cancellationToken: cancellationToken))
-            {
-                throw new AlreadyExistsException(typeof(Data.Models.ResourceSize), request.Name);
-            }
+            await using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
+
+            var model = _mapper.Map<Data.Models.ResourceSize>(command);
+
+            if (await _context.ResourceSizes.AnyAsync(x => x.Name == command.Name, cancellationToken))
+                throw new AlreadyExistsException(typeof(Data.Models.ResourceSize), command.Name);
 
             _context.ResourceSizes.Add(model);
 
             await _context.SaveChangesAsync(cancellationToken);
-            var returnedModel = await _context.ResourceSizes.Where(x => x.Name == request.Name)
+            var returnedModel = await _context.ResourceSizes.Where(x => x.Name == command.Name)
                 .FirstAsync(cancellationToken);
             await transaction.CommitAsync(cancellationToken);
             return _mapper.Map<ResourceSizeDto>(returnedModel);

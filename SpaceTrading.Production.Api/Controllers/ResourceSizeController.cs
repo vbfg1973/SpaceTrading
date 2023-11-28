@@ -9,22 +9,20 @@ using SpaceTrading.Production.Domain.Features.ResourceSize.Get;
 
 namespace SpaceTrading.Production.Api.Controllers
 {
-    [ApiController]
-    [Produces("application/json")]
     [Route("api/[controller]")]
-    public class ResourceSizeController : ControllerBase
+    public class ResourceSizeController : ApiController
     {
-        private readonly IValidator<CreateResourceSizeCommand> _createCommandValidator;
+        private readonly IValidator<CreateResourceSizeCommandDto> _createCommandValidator;
         private readonly ILogger<ResourceSizeController> _logger;
-        private readonly IMapper _mapper;
-        private readonly IMediator _mediator;
 
-        public ResourceSizeController(IValidator<CreateResourceSizeCommand> createCommandValidator, IMapper mapper,
-            IMediator mediator, ILogger<ResourceSizeController> logger)
+        public ResourceSizeController(
+            IMapper mapper,
+            IMediator mediator,
+            IValidator<CreateResourceSizeCommandDto> createCommandValidator,
+            ILogger<ResourceSizeController> logger
+        ) : base(mediator, mapper)
         {
             _createCommandValidator = createCommandValidator;
-            _mapper = mapper;
-            _mediator = mediator;
             _logger = logger;
         }
 
@@ -36,9 +34,9 @@ namespace SpaceTrading.Production.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostResourceSize(CreateResourceSizeCommand createResourceSizeCommand)
+        public async Task<IActionResult> PostResourceSize(CreateResourceSizeCommandDto createResourceSizeCommandDto)
         {
-            var validationResult = await _createCommandValidator.ValidateAsync(createResourceSizeCommand);
+            var validationResult = await _createCommandValidator.ValidateAsync(createResourceSizeCommandDto);
 
             if (!validationResult.IsValid)
             {
@@ -46,13 +44,15 @@ namespace SpaceTrading.Production.Api.Controllers
                 return BadRequest(ModelState);
             }
 
+            var command = new CreateResourceSizeCommand(createResourceSizeCommandDto, GetCorrelationId());
+            
             _logger.LogInformation("{Class} {Method} {Json}", nameof(PostResourceSize),
                 typeof(ResourceSizeController),
-                JsonSerializer.Serialize(createResourceSizeCommand));
+                JsonSerializer.Serialize(command));
 
-            var resourceSizeDto = await _mediator.Send(createResourceSizeCommand);
+            var resourceSizeDto = await _mediator.Send(command);
 
-            _logger.LogInformation("{Class} {Method} {Json}", nameof(PostResourceSize),
+            _logger.LogInformation("{Class} {Method} {Json} {CorrelationId}", nameof(PostResourceSize),
                 typeof(ResourceSizeController),
                 JsonSerializer.Serialize(resourceSizeDto));
 

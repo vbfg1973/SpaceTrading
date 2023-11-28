@@ -2,9 +2,9 @@
 
 namespace SpaceTrading.Production.Domain.Features.ResourceSize.Create
 {
-    public class CreateResourceSizeCommandValidator : AbstractValidator<CreateResourceSizeCommand>
+    public class CreateResourceSizeCommandDtoValidator : AbstractValidator<CreateResourceSizeCommandDto>
     {
-        public CreateResourceSizeCommandValidator()
+        public CreateResourceSizeCommandDtoValidator()
         {
             RuleFor(x => x.Name)
                 .NotNull()
