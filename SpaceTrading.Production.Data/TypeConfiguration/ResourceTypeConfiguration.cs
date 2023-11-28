@@ -9,6 +9,9 @@ namespace SpaceTrading.Production.Data.TypeConfiguration
         public void Configure(EntityTypeBuilder<Resource> builder)
         {
             builder.HasKey(x => x.Id);
+            
+            builder.HasIndex(x => x.Name)
+                .IsUnique();
         }
     }
 }

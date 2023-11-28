@@ -12,7 +12,10 @@ namespace SpaceTrading.Production.Data.TypeConfiguration
             builder.HasMany(e => e.Resources)
                 .WithOne(e => e.ResourceCategory)
                 .HasForeignKey(e => e.ResourceCategoryId)
-                .IsRequired();
+                .IsRequired().OnDelete(DeleteBehavior.ClientSetNull);
+            
+            builder.HasIndex(x => x.Name)
+                .IsUnique();
         }
     }
 }

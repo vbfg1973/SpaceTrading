@@ -17,7 +17,7 @@ namespace SpaceTrading.Production.Data.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .UseCollation("Latin1_General_CI_AS")
-                .HasAnnotation("ProductVersion", "7.0.14")
+                .HasAnnotation("ProductVersion", "8.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -32,7 +32,7 @@ namespace SpaceTrading.Production.Data.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("ResourceCategoryId")
                         .HasColumnType("int");
@@ -44,6 +44,9 @@ namespace SpaceTrading.Production.Data.Migrations
                         .HasColumnType("real");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.HasIndex("ResourceCategoryId");
 
@@ -62,9 +65,12 @@ namespace SpaceTrading.Production.Data.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("ResourcesCategories");
                 });
@@ -79,9 +85,15 @@ namespace SpaceTrading.Production.Data.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("Size")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("ResourceSizes");
                 });
@@ -91,13 +103,11 @@ namespace SpaceTrading.Production.Data.Migrations
                     b.HasOne("SpaceTrading.Production.Data.Models.ResourceCategory", "ResourceCategory")
                         .WithMany("Resources")
                         .HasForeignKey("ResourceCategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("SpaceTrading.Production.Data.Models.ResourceSize", "ResourceSize")
                         .WithMany("Resources")
                         .HasForeignKey("ResourceSizeId")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("ResourceCategory");

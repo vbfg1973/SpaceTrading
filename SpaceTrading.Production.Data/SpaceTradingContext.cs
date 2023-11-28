@@ -1,5 +1,4 @@
-﻿using System.Data.Common;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using SpaceTrading.Production.Data.Models;
 
 namespace SpaceTrading.Production.Data
@@ -13,14 +12,12 @@ namespace SpaceTrading.Production.Data
             _connectionString = connectionString;
         }
 
-        public SpaceTradingContext(DbContextOptions<SpaceTradingContext> options) : base(options) 
+        public SpaceTradingContext(DbContextOptions<SpaceTradingContext> options) : base(options)
         {
-            
         }
 
         public SpaceTradingContext()
         {
-            
         }
 
         public virtual DbSet<Resource> Resources { get; set; } = null!;
@@ -31,7 +28,7 @@ namespace SpaceTrading.Production.Data
         {
             if (!optionsBuilder.IsConfigured) optionsBuilder.UseSqlServer(_connectionString);
         }
-        
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.UseCollation("Latin1_General_CI_AS");
