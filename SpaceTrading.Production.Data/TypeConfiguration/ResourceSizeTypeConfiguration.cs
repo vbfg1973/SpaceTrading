@@ -14,6 +14,9 @@ namespace SpaceTrading.Production.Data.TypeConfiguration
                 .HasForeignKey(e => e.ResourceSizeId)
                 .IsRequired()
                 .IsRequired().OnDelete(DeleteBehavior.ClientSetNull);
+
+            builder.HasIndex(x => x.Name)
+                .IsUnique();
         }
     }
 }

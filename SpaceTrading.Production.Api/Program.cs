@@ -1,6 +1,8 @@
 using System.Text.Json.Serialization;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
+using SpaceTrading.Production.Api.Middleware;
 using SpaceTrading.Production.Data;
 using SpaceTrading.Production.Domain;
 
@@ -28,6 +30,7 @@ builder.Configuration.Bind("Settings", appSettings);
 builder.Services.AddAutoMapper(ProductionDomainAssemblyReference.Assembly);
 builder.Services.AddMediatR(x => x.RegisterServicesFromAssemblyContaining<ProductionDomainAssemblyReference>());
 
+builder.Services.AddValidatorsFromAssembly(ProductionDomainAssemblyReference.Assembly);
 
 builder
     .Services
@@ -40,6 +43,8 @@ builder
         dbContextOptionsBuilder.UseSqlServer(appSettings.ConnectionString));
 
 var app = builder.Build();
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseSerilogRequestLogging();
 

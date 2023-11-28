@@ -6,7 +6,6 @@ namespace SpaceTrading.Production.Domain.Features.ResourceSize.Create
     {
         public CreateResourceSizeMapper()
         {
-            CreateMap<CreateResourceSizeDto, CreateResourceSizeCommand>();
             CreateMap<CreateResourceSizeCommand, Data.Models.ResourceSize>();
         }
     }
