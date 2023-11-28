@@ -31,19 +31,22 @@ namespace SpaceTrading.Production.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostResourceSize(CreateResourceSizeDto resourceSizeDto)
+        public async Task<IActionResult> PostResourceSize(CreateResourceSizeDto createResourceSizeDto)
         {
-            _logger.LogInformation("{Class} {Method} {Json}", nameof(PostResourceSize), typeof(ResourceSizeController), JsonSerializer.Serialize(resourceSizeDto));
-            
-            var request = _mapper.Map<CreateResourceSizeCommand>(resourceSizeDto);
-            
-            _logger.LogInformation("{Class} {Method} {Json}", nameof(PostResourceSize), typeof(ResourceSizeController), JsonSerializer.Serialize(request));
-            
-            var dto = await _mediator.Send(request);
+            _logger.LogInformation("{Class} {Method} {Json}", nameof(PostResourceSize), typeof(ResourceSizeController),
+                JsonSerializer.Serialize(createResourceSizeDto));
 
-            _logger.LogInformation("{Class} {Method} {Json}", nameof(PostResourceSize), typeof(ResourceSizeController), JsonSerializer.Serialize(dto));
-            
-            return CreatedAtRoute(nameof(GetResourceSize), new { id = dto.Id }, dto);
+            var createResourceSizeCommand = _mapper.Map<CreateResourceSizeCommand>(createResourceSizeDto);
+
+            _logger.LogInformation("{Class} {Method} {Json}", nameof(PostResourceSize), typeof(ResourceSizeController),
+                JsonSerializer.Serialize(createResourceSizeCommand));
+
+            var resourceSizeDto = await _mediator.Send(createResourceSizeCommand);
+
+            _logger.LogInformation("{Class} {Method} {Json}", nameof(PostResourceSize), typeof(ResourceSizeController),
+                JsonSerializer.Serialize(resourceSizeDto));
+
+            return CreatedAtAction(nameof(GetResourceSize), new { resourceSizeDto.Id }, resourceSizeDto);
         }
     }
 }
