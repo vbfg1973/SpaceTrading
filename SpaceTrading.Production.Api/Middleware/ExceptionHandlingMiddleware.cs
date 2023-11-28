@@ -49,6 +49,21 @@ namespace SpaceTrading.Production.Api.Middleware
                 context.Response.StatusCode = (int)HttpStatusCode.NotFound;
                 result = JsonSerializer.Serialize(problemDetails);
             }
+            
+            else if (ex is AlreadyExistsException)
+            {
+                var problemDetails = new ProblemDetails
+                {
+                    Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+                    Title = "Already exists",
+                    Status = (int)HttpStatusCode.Conflict,
+                    Detail = ex.Message,
+                    Instance = context.Request.Path
+                };
+
+                context.Response.StatusCode = (int)HttpStatusCode.Conflict;
+                result = JsonSerializer.Serialize(problemDetails);
+            }
 
             else
             {
